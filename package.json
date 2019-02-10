@@ -1,0 +1,31 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joffray589/discord-bot.git"
+  },
+  "author": "Joffray Braga <joffray.braga@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joffray589/discord-bot/issues"
+  },
+  "homepage": "https://github.com/joffray589/discord-bot#readme",
+  "dependencies": {
+    "bufferutil": "^3.0.3",
+    "discord.js": "^11.4.2",
+    "erlpack": "github:discordapp/erlpack",
+    "node-opus": "^0.2.7",
+    "opusscript": "0.0.6"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.17",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.2"
+  }
+}
