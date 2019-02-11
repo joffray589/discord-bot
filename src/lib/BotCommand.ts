@@ -2,6 +2,7 @@ import {Message} from "discord.js";
 import {BotCommandSettings} from "./BotCommandSettings";
 import {DiscordBot} from "./DiscordBot";
 import {GuildContext} from "./GuildContext";
+import {PermissionNames} from './PermissionNames';
 
 
 export interface BotCommandExecutionContext {
@@ -50,4 +51,28 @@ export class BotCommand {
     get action(): BotCommandAction {
         return this._action;
     }
+
+    private isGranted(message: Message, settings: BotCommandSettings): boolean{
+
+        const perm = message.member.permissions;
+        const roles = message.member.roles.keyArray();
+
+        if (perm.has(PermissionNames.ADMINISTRATOR)){
+            return true;
+        }
+
+        for (let i = 0; i < roles.length; i++){
+
+            if (settings.isRoleGranted(roles[i])){
+                return true;
+            }
+
+        }
+
+        // TODO: manager per-user / per-channel grants here?
+
+        return false;
+    }
+
+
 }

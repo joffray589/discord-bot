@@ -37,5 +37,4 @@ export class MemGuildContextManager implements GuildContextManager{
         return Promise.resolve(this._storage.get(guildId));
     }
 
-
 }
