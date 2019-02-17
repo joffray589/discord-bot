@@ -1,11 +1,16 @@
 {
-  "name": "discordbot",
+  "name": "discord-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "prepublish": "npm run build",
+    "build": "gulp clean && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/joffray589/discord-bot.git"

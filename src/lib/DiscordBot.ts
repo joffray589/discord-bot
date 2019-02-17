@@ -66,6 +66,10 @@ export class DiscordBot extends EventEmitter {
         return this._commandsMap;
     }
 
+    get ignoredChannels(): Set<Snowflake> {
+        return this._ignoredChannels;
+    }
+
     public login(token: string, activity?: string): Promise<void> {
 
         return new Promise<void>((resolve, reject) => {
@@ -92,7 +96,8 @@ export class DiscordBot extends EventEmitter {
                 console.log(message.content);
                 console.log("-----");
 
-                this._guildContextManager.loadGuildContext(message.guild.id)
+                this._guildContextManager
+                    .loadGuildContext(message.guild.id)
                     .then((guildContext) => {
                         const commandPrefix = guildContext.commandPrefix;
 

@@ -32,11 +32,7 @@ export class BotCommand {
 
         return new Promise<void>((resolve, reject) => {
 
-            console.log("CHECK GRANT");
-            const grant = this.isGranted(context);
-
-            if (grant){
-                console.log("GRANT OK");
+            if (this.isGranted(context)){
                 try{
                     this._action.call(this, context);
                     resolve();
@@ -70,33 +66,26 @@ export class BotCommand {
 
     private isGranted(context: BotCommandExecutionContext): boolean {
 
-        console.log("1");
 
         const perm = context.message.member.permissions;
-        const roles = context.message.member.roles.keyArray();
-
-        console.log("2");
 
         if (perm && perm.has(PermissionNames.ADMINISTRATOR)){
-            console.log("AUTO GRANT TO ADMIN");
             return true;
         }
 
-        console.log("3 : " + roles);
+        if (context.settings){
+            const roles = context.message.member.roles.keyArray();
 
-        for (let i = 0; i < roles.length; i++){
+            for (let i = 0; i < roles.length; i++){
 
-            console.log("CHECK ROLE " + roles[i]);
+                if (context.settings.isRoleGranted(roles[i])){
+                    return true;
+                }
 
-            if (context.settings.isRoleGranted(roles[i])){
-                console.log("ROLE " + roles[i] + " is granted");
-                return true;
             }
-
         }
 
         // TODO: manager per-user / per-channel grants here?
-        console.log("UNGRANTED");
         return false;
     }
 
