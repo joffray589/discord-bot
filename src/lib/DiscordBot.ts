@@ -3,7 +3,7 @@ import {BotCommand, BotCommandExecutionContext} from './BotCommand';
 
 import {EventEmitter} from "events";
 import {GuildContextManager} from "./GuildContextManager";
-import {MemGuildContextManager} from "../example/MemGuildContextManager";
+import {MemoryGuildContextManager} from "./MemoryGuildContextManager";
 
 export class DiscordBot extends EventEmitter {
 
@@ -26,7 +26,7 @@ export class DiscordBot extends EventEmitter {
         this._client = new Client();
         this._commandsMap = new Map<string, BotCommand>();
         this._ignoredChannels = new Set<Snowflake>();
-        this._guildContextManager = new MemGuildContextManager();
+        this._guildContextManager = new MemoryGuildContextManager(this);
     }
 
     public addCommand(command: BotCommand){

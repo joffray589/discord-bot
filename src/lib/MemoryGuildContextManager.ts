@@ -1,11 +1,11 @@
-import {GuildContextManager} from "../lib/GuildContextManager";
+import {GuildContextManager} from "./GuildContextManager";
 import {Snowflake} from "discord.js";
-import {GuildContext} from "../lib/GuildContext";
-import {DiscordBot} from "../lib/DiscordBot";
-import {BotCommandSettings} from "../lib/BotCommandSettings";
+import {GuildContext} from "./GuildContext";
+import {DiscordBot} from "./DiscordBot";
+import {BotCommandSettings} from "./BotCommandSettings";
 
 
-export class MemGuildContextManager implements GuildContextManager{
+export class MemoryGuildContextManager implements GuildContextManager{
 
     private _bot: DiscordBot;
     private _storage: Map<string, GuildContext>;
@@ -39,10 +39,7 @@ export class MemGuildContextManager implements GuildContextManager{
                guildContext.setCommandSetting(command.keyword, new BotCommandSettings());
             });
 
-            console.log("INSERT GUILD CONTEXT");
-
             this._storage.set(guildId, guildContext);
-
         }
 
         return Promise.resolve(this._storage.get(guildId));

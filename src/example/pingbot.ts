@@ -1,8 +1,8 @@
 import {BotCommand} from "../lib/BotCommand";
 import {DiscordBot} from "../lib/DiscordBot";
-import {MemGuildContextManager} from "./MemGuildContextManager";
 import {pingAction} from "./actions/PingAction";
 import {grantAction} from "./actions/GrantAction";
+import {MemoryGuildContextManager} from "../lib/MemoryGuildContextManager";
 
 const config = require("../../config.json");
 
@@ -23,7 +23,7 @@ process.on("unhandledRejection", (reason, promise) => {
     try{
         const bot = new DiscordBot();
 
-        bot.guildContextManager = new MemGuildContextManager(bot);
+        bot.guildContextManager = new MemoryGuildContextManager(bot);
 
         await bot.login(config.bot.token, "PingBot");
         bot.addCommand(new BotCommand("ping", "ping", pingAction));
