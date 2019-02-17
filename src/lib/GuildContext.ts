@@ -80,8 +80,4 @@ export class GuildContext {
         this._reactionListeners.delete(listener.message.id);
     }
 
-
-
-
-
 }

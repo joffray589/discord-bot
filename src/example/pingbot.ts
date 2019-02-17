@@ -1,25 +1,41 @@
 import {BotCommand} from "../lib/BotCommand";
 import {DiscordBot} from "../lib/DiscordBot";
 import {MemGuildContextManager} from "./MemGuildContextManager";
+import {pingAction} from "./actions/PingAction";
+import {grantAction} from "./actions/GrantAction";
 
 const config = require("../../config.json");
 
-const bot = new DiscordBot();
+process.on("uncaughtException", (err) => {
+    // handle the error safely
+    console.log("############ uncaughtException");
+    console.log(err);
+});
 
-bot.guildContextManager = new MemGuildContextManager(bot);
+process.on("unhandledRejection", (reason, promise) => {
+    console.log("Unhandled Rejection at:", reason.stack || reason);
+    // Recommended: send the information to sentry.io
+    // or whatever crash reporting service you use
+});
 
-bot.login(config.bot.token, "PingBot")
-    .then(() => {
-        bot.addCommand(new BotCommand("ping", "ping", (context): Promise<void> => {
-            context.message.reply("pong");
-            return Promise.resolve();
-        }));
+(async () => {
+
+    try{
+        const bot = new DiscordBot();
+
+        bot.guildContextManager = new MemGuildContextManager(bot);
+
+        await bot.login(config.bot.token, "PingBot");
+        bot.addCommand(new BotCommand("ping", "ping", pingAction));
+        bot.addCommand(new BotCommand("grant", "grant", grantAction(true)));
+        bot.addCommand(new BotCommand("ungrant", "ungrant", grantAction(false)));
 
         bot.listen();
-    })
-    .catch((error) => {
-        console.log("Bot login error : " + error);
-    });
+        console.log("Bot ready");
+    }
+    catch(e){
+        console.log(e);
+    }
 
-
+})();
 

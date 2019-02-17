@@ -1,7 +1,8 @@
-import {GuildContextManager} from '../lib/GuildContextManager';
-import {Snowflake} from 'discord.js';
-import {GuildContext} from '../lib/GuildContext';
-import {DiscordBot} from '../lib/DiscordBot';
+import {GuildContextManager} from "../lib/GuildContextManager";
+import {Snowflake} from "discord.js";
+import {GuildContext} from "../lib/GuildContext";
+import {DiscordBot} from "../lib/DiscordBot";
+import {BotCommandSettings} from "../lib/BotCommandSettings";
 
 
 export class MemGuildContextManager implements GuildContextManager{
@@ -31,7 +32,17 @@ export class MemGuildContextManager implements GuildContextManager{
     public loadGuildContext(guildId: Snowflake): Promise<GuildContext> {
 
         if (!this._storage.has(guildId)){
-            this._storage.set(guildId, new GuildContext(guildId, "!"));
+
+            const guildContext = new GuildContext(guildId, "!");
+
+            this._bot.commandsMap.forEach(command => {
+               guildContext.setCommandSetting(command.keyword, new BotCommandSettings());
+            });
+
+            console.log("INSERT GUILD CONTEXT");
+
+            this._storage.set(guildId, guildContext);
+
         }
 
         return Promise.resolve(this._storage.get(guildId));

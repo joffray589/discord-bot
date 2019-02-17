@@ -1,11 +1,11 @@
-import {Client, Message} from "discord.js";
-import {BotCommand} from "./BotCommand";
+import {Client, Message, Snowflake} from 'discord.js';
+import {BotCommand, BotCommandExecutionContext} from './BotCommand';
 
 import {EventEmitter} from "events";
 import {GuildContextManager} from "./GuildContextManager";
+import {MemGuildContextManager} from "../example/MemGuildContextManager";
 
-
-export class DiscordBot extends EventEmitter{
+export class DiscordBot extends EventEmitter {
 
     /**
      * client provided by the discord.js module
@@ -19,11 +19,14 @@ export class DiscordBot extends EventEmitter{
 
     private _guildContextManager: GuildContextManager;
 
+    private _ignoredChannels: Set<Snowflake>;
 
     constructor() {
         super();
         this._client = new Client();
         this._commandsMap = new Map<string, BotCommand>();
+        this._ignoredChannels = new Set<Snowflake>();
+        this._guildContextManager = new MemGuildContextManager();
     }
 
     public addCommand(command: BotCommand){
@@ -37,22 +40,6 @@ export class DiscordBot extends EventEmitter{
         }
 
         this._commandsMap.set(command.keyword, command);
-    }
-
-    public login(token: string, activity?: string): Promise<void> {
-
-        return new Promise<void>((resolve, reject) => {
-            this._client.login(token)
-                .then(() => {
-                    if (activity){
-                        this.setActivity(activity);
-                    }
-                    resolve();
-                })
-                .catch((error) => {
-                    reject(error);
-                });
-        });
     }
 
     public setActivity(activity: string){
@@ -79,36 +66,71 @@ export class DiscordBot extends EventEmitter{
         return this._commandsMap;
     }
 
+    public login(token: string, activity?: string): Promise<void> {
+
+        return new Promise<void>((resolve, reject) => {
+
+            this._client.login(token)
+                .then(() => {
+                    if (activity){
+                        this.setActivity(activity);
+                    }
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    }
+
     public listen(){
 
         this._client.on("message", (message: Message) => {
 
-            // console.log("Received message from " + message.author.username);
-            // console.log(message.content);
-            // console.log("-----");
+            if (!this.ignoreMessage(message)){
+                console.log("Received message from " + message.author.username + " on channel " + message.channel.id);
+                console.log(message.content);
+                console.log("-----");
 
-            this._guildContextManager.loadGuildContext(message.guild.id)
-                .then((guildContext) => {
-                    const commandPrefix = guildContext.commandPrefix;
+                this._guildContextManager.loadGuildContext(message.guild.id)
+                    .then((guildContext) => {
+                        const commandPrefix = guildContext.commandPrefix;
 
-                    if (!message.author.bot && message.content.startsWith(commandPrefix)){
+                        if (!message.author.bot && message.content.startsWith(commandPrefix)){
 
-                        let keyword = message.content.split(" ")[0] || "";
+                            let keyword = message.content.split(" ")[0] || "";
 
-                        if (keyword && keyword !== ""){
-                            keyword = keyword.substring(commandPrefix.length);
-                            const botCommand = this.getCommand(keyword);
-                            const settings = guildContext.getCommandSettings(keyword);
-                            const bot = this;
-                            if (botCommand){
-                                botCommand.execute({ bot, botCommand, message, guildContext, settings });
+                            if (keyword && keyword !== ""){
+                                keyword = keyword.substring(commandPrefix.length);
+                                const command = this.getCommand(keyword);
+
+                                if (command){
+
+                                    const settings = guildContext.getCommandSettings(keyword);
+
+                                    if (settings){
+                                        const context: BotCommandExecutionContext = {
+                                            bot: this,
+                                            botCommand: command,
+                                            message: message,
+                                            guildContext: guildContext,
+                                            settings: settings
+                                        };
+
+                                        command.execute(context);
+                                    }
+
+                                }
                             }
                         }
-                    }
-                })
-                .catch((error) => {
-                    console.log("Load guild context error : " + error);
-                });
+                    })
+                    .catch((error) => {
+                        console.log("Load guild context error : " + error);
+                    });
+            }
+
+
+
 
         });
 
@@ -163,6 +185,34 @@ export class DiscordBot extends EventEmitter{
 
         });
 
+    }
+
+
+    /**
+     * Here to try to prevent the loadGuilContext call
+     * @param message : received message
+     */
+    private ignoreMessage(message: Message) : boolean{
+
+        // TODO : delete this condition...
+        if(message.channel.id === "537693096180318238"){
+            return true;
+        }
+
+        if (message.author.bot){
+            return true;
+        }
+
+        // TODO : allow the bot to ignore channels here
+        if (this._ignoredChannels.has(message.channel.id)){
+            return true;
+        }
+
+        // TODO : create a command prefix set and check if the message start with an existing prefix
+
+        // TODO : add spam prevention here
+
+        return false;
     }
 
 
