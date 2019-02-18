@@ -1,7 +1,12 @@
 {
     "compileOnSave": false,
+    "include": ["src/**/*.ts"],
+    "exclude": [
+        "dist",
+        "node_modules"
+    ],
     "compilerOptions": {
-        "outDir": "./dist",
+        "outDir": ".",
         "sourceMap": true,
         "declaration": true,
         "moduleResolution": "node",
