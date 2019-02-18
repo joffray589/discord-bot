@@ -1,4 +1,4 @@
-import {BotCommandExecutionContext} from '../../lib/BotCommand';
+import {BotCommandExecutionContext} from "../../lib/BotCommand";
 
 
 export let grantAction = (grant: boolean) => {
