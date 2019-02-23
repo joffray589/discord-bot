@@ -36,7 +36,7 @@ export class MemoryGuildContextManager implements GuildContextManager{
             const guildContext = new GuildContext(guildId, "!");
 
             this._bot.commandsMap.forEach(command => {
-               guildContext.setCommandSetting(command.keyword, new BotCommandSettings());
+               guildContext.setCommandSetting(command.keyword, new BotCommandSettings(command));
             });
 
             this._storage.set(guildId, guildContext);

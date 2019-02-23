@@ -92,9 +92,9 @@ export class DiscordBot extends EventEmitter {
         this._client.on("message", (message: Message) => {
 
             if (!this.ignoreMessage(message)){
-                console.log("Received message from " + message.author.username + " on channel " + message.channel.id);
-                console.log(message.content);
-                console.log("-----");
+                //console.log("Received message from " + message.author.username + " on channel " + message.channel.id);
+                //console.log(message.content);
+                //console.log("-----");
 
                 this._guildContextManager
                     .loadGuildContext(message.guild.id)

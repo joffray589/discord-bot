@@ -1,11 +1,14 @@
 import {Snowflake} from "discord.js";
+import {BotCommand} from './BotCommand';
 
 
 export class BotCommandSettings {
 
+    private _command: BotCommand;
+
     private _allowedRoles: Set<Snowflake>;
 
-    constructor(){
+    constructor(command: BotCommand){
         this._allowedRoles = new Set<Snowflake>();
     }
 
