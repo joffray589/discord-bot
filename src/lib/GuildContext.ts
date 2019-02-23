@@ -7,7 +7,6 @@ export class GuildContext {
 
     private _guildId: Snowflake;
     private _commandPrefix: string;
-    private _enabledCommands: Set<string>;
     private _commandSettings: Map<string, BotCommandSettings>;
 
     private _voiceConnections: Map<string, VoiceConnection>;
@@ -16,7 +15,6 @@ export class GuildContext {
     constructor(guildId: Snowflake, commandPrefix: string){
         this._guildId = guildId;
         this._commandPrefix = commandPrefix;
-        this._enabledCommands = new Set<string>();
         this._commandSettings = new Map<string, BotCommandSettings>();
         this._voiceConnections = new Map<string, VoiceConnection>();
         this._reactionListeners = new Map<Snowflake, ReactionListener>();
@@ -35,18 +33,6 @@ export class GuildContext {
         this._commandPrefix = value;
     }
 
-    public isCommandEnabled(keyword: string): boolean{
-        return this._enabledCommands.has(keyword);
-    }
-
-    public enableCommand(keyword: string){
-        this._enabledCommands.add(keyword);
-    }
-
-    public disableCommand(keyword: string){
-        this._enabledCommands.delete(keyword);
-    }
-
     public setCommandSetting(keyword: string, settings: BotCommandSettings){
         this._commandSettings.set(keyword, settings);
     }
@@ -54,7 +40,6 @@ export class GuildContext {
     public getCommandSettings(keyword: string): BotCommandSettings{
         return this._commandSettings.get(keyword);
     }
-
 
     public getVoiceConnection(channelId: Snowflake): VoiceConnection{
         return this._voiceConnections.get(channelId);

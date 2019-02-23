@@ -124,7 +124,7 @@ export class DiscordBot extends EventEmitter {
                                             command.execute(context);
                                         })
                                         .catch((error) => {
-
+                                            console.log("getCommandSetting error : " + error);
                                         });
 
                                 }
