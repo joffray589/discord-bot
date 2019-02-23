@@ -12,4 +12,5 @@ export declare class MemoryGuildContextManager implements GuildContextManager {
     removeGuildContext(guildId: Snowflake): Promise<void>;
     loadGuildContext(guildId: Snowflake): Promise<GuildContext>;
     getCommandSetting(guildId: Snowflake, commandKeyword: string): Promise<BotCommandSettings>;
+    changeCommandPrefix(guildId: Snowflake, commandPrefix: string): Promise<void>;
 }

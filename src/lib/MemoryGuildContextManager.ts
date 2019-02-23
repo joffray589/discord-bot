@@ -55,4 +55,17 @@ export class MemoryGuildContextManager implements GuildContextManager{
 
     }
 
+    public async changeCommandPrefix(guildId: Snowflake, commandPrefix: string): Promise<void> {
+
+        try{
+            const context = await this.loadGuildContext(guildId);
+            context.commandPrefix = commandPrefix;
+            return Promise.resolve();
+        }
+        catch (error) {
+            return Promise.reject(error);
+        }
+
+    }
+
 }

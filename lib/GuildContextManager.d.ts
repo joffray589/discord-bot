@@ -8,4 +8,5 @@ export interface GuildContextManager {
     removeGuildContext(guildId: Snowflake): Promise<void>;
     loadGuildContext(guildId: Snowflake): Promise<GuildContext>;
     getCommandSetting(guildId: Snowflake, commandKeyword: string): Promise<BotCommandSettings>;
+    changeCommandPrefix(guildId: Snowflake, commandPrexix: string): Promise<void>;
 }
