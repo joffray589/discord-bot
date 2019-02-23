@@ -7,9 +7,11 @@ export class BotCommandSettings {
     private _command: BotCommand;
 
     private _allowedRoles: Set<Snowflake>;
+    private _allowedChannels: Set<Snowflake>;
 
     constructor(command: BotCommand){
         this._allowedRoles = new Set<Snowflake>();
+        this._allowedChannels = new Set<Snowflake>();
     }
 
 
@@ -24,6 +26,19 @@ export class BotCommandSettings {
 
     public isRoleGranted(roleId: Snowflake): boolean {
         return this._allowedRoles.has(roleId);
+    }
+
+    public grantChannel(channelId: Snowflake, grant: boolean = true){
+        if (grant){
+            this._allowedChannels.add(channelId);
+        }
+        else{
+            this._allowedChannels.delete(channelId);
+        }
+    }
+
+    public isChannelGranted(channelId: Snowflake): boolean {
+        return this._allowedChannels.has(channelId);
     }
 
     get command(): BotCommand {

@@ -83,6 +83,11 @@ export class BotCommand {
                 }
 
             }
+
+            if ( context.settings.isChannelGranted(context.message.channel.id)){
+                return true;
+            }
+
         }
 
         // TODO: manager per-user / per-channel grants here?
