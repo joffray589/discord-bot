@@ -11,4 +11,5 @@ export declare class BotCommandSettings {
     isChannelGranted(channelId: Snowflake): boolean;
     readonly command: BotCommand;
     readonly allowedRoles: Set<Snowflake>;
+    readonly allowedChannels: Set<Snowflake>;
 }
