@@ -22,6 +22,7 @@ export declare class DiscordBot extends EventEmitter {
     readonly commandsMap: Map<string, BotCommand>;
     readonly ignoredChannels: Set<Snowflake>;
     login(token: string, activity?: string): Promise<void>;
+    private error;
     listen(): void;
     /**
      * Here to try to prevent the loadGuilContext call

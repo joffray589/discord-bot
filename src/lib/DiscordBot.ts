@@ -87,11 +87,21 @@ export class DiscordBot extends EventEmitter {
         });
     }
 
+    private error(error: any){
+        this.emit("error", error);
+    }
+
     public listen(){
 
         this._client.on("message", (message: Message) => {
 
+            this.emit("received-message", message);
+
+
             if (!this.ignoreMessage(message)){
+
+                this.emit("parsing-message", message);
+
                 //console.log("Received message from " + message.author.username + " on channel " + message.channel.id);
                 //console.log(message.content);
                 //console.log("-----");
@@ -121,10 +131,12 @@ export class DiscordBot extends EventEmitter {
                                                 settings: settings
                                             };
 
+                                            this.emit("execute-command", context, command);
+
                                             command.execute(context);
                                         })
                                         .catch((error) => {
-                                            console.log("getCommandSetting error : " + error);
+                                            this.error("message event : getCommandSetting error : " + error);
                                         });
 
                                 }
@@ -132,12 +144,9 @@ export class DiscordBot extends EventEmitter {
                         }
                     })
                     .catch((error) => {
-                        console.log("Load guild context error : " + error);
+                        this.error("message event : loadGuildContext error : " + error);
                     });
             }
-
-
-
 
         });
 
@@ -153,7 +162,7 @@ export class DiscordBot extends EventEmitter {
                     }
                 })
                 .catch((error) => {
-                    console.log("Load guild context error : " + error);
+                    this.error("message event : loadGuildContext error : " + error);
                 });
 
         });
@@ -170,7 +179,7 @@ export class DiscordBot extends EventEmitter {
                     }
                 })
                 .catch((error) => {
-                    console.log("Load guild context error : " + error);
+                    this.error("messageReactionRemove event : loadGuildContext error : " + error);
                 });
 
         });
@@ -187,9 +196,20 @@ export class DiscordBot extends EventEmitter {
                     }
                 })
                 .catch((error) => {
-                    console.log("Load guild context error : " + error);
+                    this.error("messageReactionRemoveAll event : loadGuildContext error : " + error);
                 });
 
+        });
+
+        this._client.on("guildMemberRemove", (member) => {
+            if (member.user.id === this._client.user.id){
+                // The bot has been kicked :( , we can delete his settings
+                this.guildContextManager
+                    .removeGuildContext(member.guild.id)
+                    .catch((error) => {
+                        this.error("guildMemberRemove event : removeGuildContext error : " + error);
+                    });
+            }
         });
 
     }
