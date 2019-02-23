@@ -49,4 +49,8 @@ export class BotCommandSettings {
         return this._allowedRoles;
     }
 
+
+    get allowedChannels(): Set<Snowflake> {
+        return this._allowedChannels;
+    }
 }
