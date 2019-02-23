@@ -26,6 +26,10 @@ export class BotCommandSettings {
         return this._allowedRoles.has(roleId);
     }
 
+    get command(): BotCommand {
+        return this._command;
+    }
+
     get allowedRoles(): Set<Snowflake> {
         return this._allowedRoles;
     }
