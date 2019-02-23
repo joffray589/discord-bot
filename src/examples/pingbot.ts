@@ -4,7 +4,7 @@ import {pingAction} from "./actions/PingAction";
 import {grantAction} from "./actions/GrantAction";
 import {MemoryGuildContextManager} from "../lib/MemoryGuildContextManager";
 
-const config = require("../../config.json");
+const config = require("../config.json");
 
 process.on("uncaughtException", (err) => {
     // handle the error safely

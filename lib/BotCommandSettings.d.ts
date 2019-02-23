@@ -6,5 +6,6 @@ export declare class BotCommandSettings {
     constructor(command: BotCommand);
     grantRole(roleId: Snowflake, grant?: boolean): void;
     isRoleGranted(roleId: Snowflake): boolean;
+    readonly command: BotCommand;
     readonly allowedRoles: Set<Snowflake>;
 }

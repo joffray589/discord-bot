@@ -45,4 +45,14 @@ export class MemoryGuildContextManager implements GuildContextManager{
         return Promise.resolve(this._storage.get(guildId));
     }
 
+    public getCommandSetting(guildId: Snowflake, commandKeyword: string): Promise<BotCommandSettings> {
+
+        if(this._storage.has(guildId) && this._storage.get(guildId).getCommandSettings(commandKeyword)){
+            return Promise.resolve(this._storage.get(guildId).getCommandSettings(commandKeyword));
+        }
+
+        return Promise.reject("Unable to find command setting");
+
+    }
+
 }

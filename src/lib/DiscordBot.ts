@@ -111,19 +111,21 @@ export class DiscordBot extends EventEmitter {
 
                                 if (command){
 
-                                    const settings = guildContext.getCommandSettings(keyword);
+                                    this.guildContextManager.getCommandSetting(message.guild.id, keyword)
+                                        .then((settings) => {
+                                            const context: BotCommandExecutionContext = {
+                                                bot: this,
+                                                botCommand: command,
+                                                message: message,
+                                                guildContext: guildContext,
+                                                settings: settings
+                                            };
 
-                                    if (settings){
-                                        const context: BotCommandExecutionContext = {
-                                            bot: this,
-                                            botCommand: command,
-                                            message: message,
-                                            guildContext: guildContext,
-                                            settings: settings
-                                        };
+                                            command.execute(context);
+                                        })
+                                        .catch((error) => {
 
-                                        command.execute(context);
-                                    }
+                                        });
 
                                 }
                             }
